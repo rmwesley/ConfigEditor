@@ -1,6 +1,10 @@
 import sys
 import json
 import re
+import logging
+
+logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+logger = logging.getLogger(__name__)
 
 config_filename = sys.argv[1]
 updates_filename = sys.argv[2]
@@ -25,7 +29,6 @@ def update(path, dict_obj, new_value):
             # Regular expression to find all array indices
             # That is, integers enclosed in square brackets, like [2]
             indices = re.findall(r'\[([^]]*)\]', key)
-
             for idx in indices:
                 current = current[int(idx)]
         else:
@@ -51,12 +54,16 @@ with open(config_filename) as conf_file:
     json_conf = json.load(conf_file)
 
 with open(updates_filename) as changes_file:
-    for line in changes_file:
+    for line_number, line in enumerate(changes_file):
         left, right = line.split('": ', 1)
         path = left[1:]
         change_value = right[:-1]
 
-        update(path, json_conf, change_value)
+        try:
+            update(path, json_conf, change_value)
+            logger.debug(f"operation {line_number} succeeded!")
+        except:
+            logger.warning(f"operation {line_number} failed...")
 
 if WRITE_TO_FILE:
     with open(output_filename, 'w') as output:
