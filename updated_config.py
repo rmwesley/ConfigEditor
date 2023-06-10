@@ -19,7 +19,8 @@ def update(path, dict_obj, new_value):
 
             # Regular expression to find all array indices
             # That is, integers enclosed in square brackets, like [2]
-            indices = re.findall(r"\[(\d+)\]", key)
+            indices = re.findall(r'\[([^]]*)\]', key)
+
             for idx in indices:
                 current = current[int(idx)]
         else:
@@ -32,7 +33,7 @@ def update(path, dict_obj, new_value):
 
         # Regular expression to find all array indices
         # That is, integers enclosed in square brackets, like [2]
-        indices = re.findall(r'\[(\d+)\]', last_key)
+        indices = re.findall(r'\[([^]]*)\]', last_key)
         last_index = indices.pop()
 
         for idx in indices:
