@@ -57,7 +57,7 @@ with open(updates_filename) as changes_file:
     for line_number, line in enumerate(changes_file):
         left, right = line.split('": ', 1)
         path = left[1:]
-        change_value = right[:-1]
+        change_value = json.loads(right[:-1])
 
         try:
             update(path, json_conf, change_value)
