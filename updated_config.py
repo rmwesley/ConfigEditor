@@ -5,6 +5,11 @@ import re
 config_filename = sys.argv[1]
 updates_filename = sys.argv[2]
 
+WRITE_TO_FILE = False
+if len(sys.argv) > 3:
+    output_filename = sys.argv[3]
+    WRITE_TO_FILE = True
+
 def update(path, dict_obj, new_value):
     keys = path.split('.')
     last_key = keys.pop()
@@ -52,4 +57,9 @@ with open(updates_filename) as changes_file:
         change_value = right[:-1]
 
         update(path, json_conf, change_value)
-print(json_conf)
+
+if WRITE_TO_FILE:
+    with open(output_filename, 'w') as output:
+        json.dump(json_conf, output)
+else:
+    print(json_conf)
